@@ -2,12 +2,22 @@
 19. to find average of two numbers. 
 
 pseudo: 
-    Input "num1"
-    Input "num2"
+    Input num1
+    Input num2
     sum=num1+num2
     average=sum/2
     Print average 
 
 pseudo:routine
-   function AvgNumber
-    
+   function AvgNumber(num1,num2)
+   int sum=0,average=0
+   sum=num1+num2
+   average=sum/2
+   return average
+
+pseudo:routine test
+   procedure TestAvgNumber()
+   Input num1 
+   Input num2
+   average=AvgNumber(num1,num2)
+   print average
