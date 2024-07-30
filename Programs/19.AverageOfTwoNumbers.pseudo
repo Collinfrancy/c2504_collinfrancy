@@ -1,0 +1,13 @@
+
+19. to find average of two numbers. 
+
+pseudo: 
+    Input "num1"
+    Input "num2"
+    sum=num1+num2
+    average=sum/2
+    Print average 
+
+pseudo:routine
+   function AvgNumber
+    
