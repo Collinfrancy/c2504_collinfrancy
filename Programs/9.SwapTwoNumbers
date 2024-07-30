@@ -22,4 +22,5 @@ pseudo:rotine test
   Input num1
   Input num2
   SwapNumbers(num1,num2)
+  print num1,num2
   
