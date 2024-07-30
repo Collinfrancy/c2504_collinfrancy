@@ -1,0 +1,18 @@
+14. to print N natural numbers.
+
+pseudo:
+  Input num
+  Initialize i=1 
+  Iterate until i is less than num using a for loop and in each iteration print i
+  
+psuode:routine 
+
+   function NatNumber(num)
+   for(i=0;i<num;i++)
+   print i
+
+pseudo:routine test
+  procedure TestNatNumber()
+  Input num
+  NatNumber(num)
+   
