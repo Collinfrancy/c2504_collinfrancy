@@ -1,0 +1,16 @@
+20. to find cube of number
+pseudo: 
+    Input num 
+    cube = num * num * num 
+    Print cube 
+    
+pseudo: routine 
+    Function FindCube(num)
+        cube = num * num * num 
+        Return cube 
+    
+pseudo: routine test
+    Procedure TestFindCube()
+        Input num 
+        cube = FindCube(num)
+        print cube
