@@ -1,0 +1,25 @@
+9. swap two numbers
+
+
+pseudo:
+  Input num1
+  Input num2
+  intialize temp
+  temp=num1
+  num1=num2
+  num1=temp
+
+pseudo:routine
+  function SwapNumbers(num1,num2)
+  int temp
+  temp=num1
+  num1=num2
+  num1=temp
+  return num1,num2
+
+pseudo:rotine test
+  procedure TestSwapNumbers()
+  Input num1
+  Input num2
+  SwapNumbers(num1,num2)
+  
