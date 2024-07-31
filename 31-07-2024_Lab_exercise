@@ -1,0 +1,177 @@
+
+*****write the pseudocode for calculating the total cost of items in a shopping cart
+ including applying a discount if the total exceeds a certain amount*****
+
+
+int discountThreshold,discountPercentage,discountAmount
+Function calculateTotalCost(cart, discountThreshold, discountPercentage):
+   int  totalCost = 0
+
+    For each item in cart:
+        totalCost = totalCost + item.price
+   
+    if totalCost > discountThreshold:
+        discountAmount = totalCost *  (discountPercentage / 100)
+        totalCost = totalCost - discountAmount
+    
+    Return totalCost
+
+
+
+**simple calculator****
+
+double result=0,num1,num2
+char operation
+input num1 and num2 from user
+input the operation-+,-,*,/
+if operation is + 
+  set result= num1+num2
+elseif operation is -
+  set result=num1-num2
+elseif operation is *
+  set result=num1*num2
+elseif operation is /
+  set result =num1/num2
+else
+  print invalid opeartion
+
+print result
+
+
+***FizzBuzz Problem***
+
+for(i=1;i<=100;i++)
+{
+if(i%3==0&&i%5==0)
+  print FizzBuzz
+elseif(i%3==0)
+  print Fizz
+elseif(i%5==0)
+  print Buzz
+
+}
+
+
+
+****check string is palindrome or not****
+
+
+input str 
+len=strlen
+intialize flag=0
+for(i=0;i<len/2;i++){
+  if(str[i]!=str[len-i-1])
+   {
+    flag=1
+   }
+}
+if(flag)
+  print palindrome
+else
+  print not palindrome
+
+
+
+****finding largest from araay****
+
+int n
+double arr[100]
+
+for(int i=1;i<n;i++){
+if(arr[0]<arr[i])
+arr[0]=arr[i]
+}
+
+
+***write pseudocode to manage a simple bank account that allows deposits withdrawals and checking the balance****
+
+  int  balance = 0,amount
+
+    function deposit(amount)
+        if (amount > 0) THEN
+            balance = balance + amount
+            PRINT balance
+    END function
+
+  
+    function withdraw(amount)
+       if (amount > 0) THEN
+            if (amount <= balance) THEN
+                balance = balance - amount
+                PRINT balanace
+            else
+                PRINT "not enough cash."
+            END if
+       
+    END function
+
+   function checkBalance()
+        print balance
+    
+
+***sum of first 10 even number*****
+
+BEGIN
+  DECLARE sum=0 AS INT
+  DECLARE n=10 AS INT
+  do{
+    sum=sum+n
+    n=n-2
+    }while(n<0)
+
+END
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
