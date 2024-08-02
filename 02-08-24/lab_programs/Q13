@@ -1,0 +1,67 @@
+P5. print the N th term in the series 0, 1, 1, 2, 3, 5, 8, 13, ... N terms 
+    Q13: use for loop
+    Q14: use while loop
+    Q15: use do..while loop
+
+****C# CODE***
+
+
+class Q131415
+{
+      // Q13: use for loop
+
+    static void Nthtermseries0_1_1_2_3()
+    {
+        // Read the position of the term from the user
+       
+
+        // Handle the case when N is less than or equal to 0
+        if (N <= 0)
+        {
+            Console.WriteLine("The position must be a positive integer.");
+            return;
+        }
+        
+        // Initialize the first two numbers of the Fibonacci series
+        int a = 0, b = 1;
+
+        // Special case handling for the first two terms
+        if (N == 1)
+        {
+            Console.WriteLine("The " + N + "th term is " + a);
+            return;
+        }
+        else if (N == 2)
+        {
+            Console.WriteLine("The " + N + "th term is " + b);
+            return;
+        }
+
+        // Compute the Nth term using a for loop
+        int nthTerm = 0;
+        for (int i = 3; i <= N; i++)
+        {
+            nthTerm = a + b;
+            a = b;
+            b = nthTerm;
+        }
+        return nthterm;
+    }
+
+ static void TestNthtermseries0_1_1_2_3()
+    {
+        Console.Write("Enter the position of the term to find (N): ");
+        int N = int.Parse(Console.ReadLine());
+        int nthTerm = Nthtermseries0_1_1_2_3(N);
+        Console.WriteLine($"Nth term is {nthTerm}"); 
+    }
+
+    static void Main(string[] args) //user: p
+    { 
+        TestNthtermseries0_1_1_2_3();
+        Console.WriteLine("Press any key to contine...");
+        Console.ReadKey();
+    }
+}
+
+
