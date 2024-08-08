@@ -1,0 +1,84 @@
+
+questions from normalization to introtuction to sql 
+
+
+1.what is normalization?
+Normalization in Database Management Systems (DBMS) is a process used to organize a database into tables and columns 
+to reduce data redundancy and improve data integrity. The main goal of normalization is to divide a database into smaller,
+related tables to ensure that each piece of data is stored only once, eliminating the possibility of anomalies 
+and inconsistencies.
+2.various types of normalization levels?
+1NF,2Nf,3NF
+3.EXPLAIN each normal forms in databse
+
+First Normal Form (1NF):
+
+Ensure that each column contains atomic (indivisible) values, and each record is unique.
+Remove repeating groups of data.
+Second Normal Form (2NF):
+
+Achieve 1NF.
+Remove partial dependencies, where non-key attributes depend only on a part of the primary key. This applies to tables with composite keys.
+Third Normal Form (3NF):
+
+Achieve 2NF.
+Remove transitive dependencies, where non-key attributes depend on other non-key attributes rather than on the primary key.
+
+4.explain partial dependency and trasitive dependency
+
+A partial dependency occurs when a non-prime attribute (a column that is not part of any candidate key) is functionally 
+dependent on part of a composite primary key, rather than on the whole key.
+A transitive dependency occurs when a non-prime attribute is dependent on another non-prime attribute rather than directly 
+on the primary key.
+
+
+5.what is databse transaction
+
+a database transaction is a sequence of operations or tasks performed on the database that are treated as a single, 
+indivisible unit of work. The goal of a transaction is to ensure that the database remains in a consistent state, even in the face of errors, crashes, or concurrent operations.
+
+6.explain ACID properties
+
+Atomicity: Ensures that all operations within a transaction are completed successfully; if any operation fails, 
+the entire transaction is rolled back, and the database is left unchanged.
+Consistency: Ensures that a transaction takes the database from one consistent state to another, adhering to all rules,
+ constraints, and triggers defined in the database schema.
+Isolation: Ensures that transactions are executed in isolation from each other, meaning that intermediate states of a 
+transaction are not visible to other transactions until the transaction is committed.
+Durability: Guarantees that once a transaction is committed, its effects are permanent, even in the event of a system failure.
+
+
+7.Explain transaction Lifecycle
+
+Begin Transaction: The transaction starts.
+Execute Operations: Various operations (such as read, write, update, or delete) are performed on the database.
+Commit: If all operations are successful, the transaction is committed, and changes are permanently saved to the database.
+Rollback: If any operation fails or an error occurs, the transaction is rolled back, undoing all changes made during the transaction.
+
+ explain BEGIN-COMMIT,BEGIN-ROLLBACK
+The BEGIN-COMMIT sequence is used to start and successfully complete a transaction.
+The BEGIN-ROLLBACK sequence is used to start a transaction and undo any changes if something goes wrong.
+
+ 8.Different types of keys
+
+Primary key,candidate key,foreign key,secondary key,unique key,alternate key
+
+  9.constraints in SQL
+PRimarykey constraint,forignkey constraint, notnull constraint,check constraint,unique key constraint
+
+ 10 What is diff bt FK and PK in SQL Server?  
+
+Primary Key:
+Uniquely identifies each record in a table.
+Cannot contain NULL values. 	
+The primary key is the “one” side of a one-to-many relationship. It is the unique identifier for the “parent” table.
+
+Foreign Key:
+Establishes and enforces a link between two tables.
+Ensures that a value in one table (the foreign key) corresponds to an existing value in another table (the primary key).
+Can contain NULL values if the relationship is optional.
+The foreign key is the “many” side of a one-to-many relationship. It is used to link the “child” table to the “parent” table.
+
+ 11 What are the indexes in SQL Server?
+
+Clutered index,nonclustered index,Composite index,Unique index
