@@ -1,0 +1,115 @@
+*****QUESTION 1****
+
+Find Employees with No Manager
+Problem:
+Given an `Employees` table
+with columns `EmployeeID`, `Name`, and `ManagerID`
+(which refers to `EmployeeID` of the manager),
+find all employees who do not have a manager.
+
+Table Structure:
+```
+CREATE TABLE Employees (
+EmployeeID INT,
+Name VARCHAR(100),
+ManagerID INT
+);
+
+*****ANSWER*****
+
+SELECT EmployeeID,Name
+FROM Employees
+WHERE ManagerID IS NULL;
+
+*****QUESTION 2****
+
+Find Orders with the Largest Order Value
+Problem: Given an `Orders` table
+with columns `OrderID`, `CustomerID`, and `OrderValue`,
+find the order with the largest order value.
+
+*****ANSWER 2*****
+
+SELECT OrderID,CustomerID,OrderValue AS LargestOrderValue
+FROM Orders
+WHERE OrderValue IN (SELECT MAX(OrderValue) FROM Orders);
+
+
+*****QUESTION 3****
+
+Find Customers with Multiple Orders
+Problem: Given a `Customers` table and an `Orders` table
+where `Orders` contains a `CustomerID`,
+find customers who have placed more than one order.
+
+Table Structure:
+```
+CREATE TABLE Customers (
+CustomerID INT,
+Name VARCHAR(100)
+);
+
+CREATE TABLE Orders (
+OrderID INT,
+CustomerID INT,
+OrderDate DATE
+);
+```
+*****ANSWER 3*****
+
+SELECT c.CustomerID, c.Name, COUNT(o.OrderID) AS OrderCount
+FROM Customers c
+JOIN Orders o ON c.CustomerID = o.CustomerID
+GROUP BY c.CustomerID, c.Name
+HAVING COUNT(o.OrderID) > 1;
+
+
+*****QUESTION 4****
+
+Find the Day with the Highest Sales
+Problem: Given a `Sales` table
+with columns `SaleAmount` and `SaleDate`,
+find the day with the highest total sales.
+
+*****ANSWER 4*****
+
+SELECT SaleDate, SUM(SaleAmount) AS TotalSales
+FROM Sales
+GROUP BY SaleDate
+ORDER BY TotalSales DESC
+LIMIT 1;
+
+
+*****QUESTION 5****
+
+Find the Average Salary by Department
+Problem: Given an `Employees` table
+with columns `EmployeeID`, `DepartmentID`, and `Salary`,
+find the average salary for each department.
+
+Table Structure:
+```
+CREATE TABLE Employees (
+EmployeeID INT,
+DepartmentID INT,
+Salary DECIMAL(10, 2)
+);
+```
+
+*****ANSWER 5*****  
+
+
+SELECT DepartmentID ,AVG(Salary) AS AverageSalary
+FROM Employees
+GROUP BY DepartmentID ;
+
+
+
+
+
+
+
+
+
+
+
