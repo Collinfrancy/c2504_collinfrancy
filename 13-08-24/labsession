@@ -1,0 +1,98 @@
+****C# for bank account*****
+//describs encalpsulation
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Accountbalace
+
+{
+    class Account
+    {
+        public string Number { get; private set; } // Encapsulate the account number
+        private float balance;
+        public float Balance
+        {
+            get { return balance; }
+            private set
+            {
+                if (value < 0)
+                {
+                    Console.WriteLine("Balance cannot be negative. Operation canceled.");
+                    return;
+                }
+                if (value > 5000000)
+                {
+                    Console.WriteLine("Balance cannot be greater than 5000000. Operation canceled.");
+                    return;
+                }
+                balance = value;
+            }
+        }
+
+        public Account(string _number)
+        {
+            Number = _number;
+            Balance = 0;
+        }
+
+        public void Deposit(float amount)
+        {
+            if (amount > 500000)
+            {
+                Console.WriteLine("Cannot deposit more than 500,000 at once.");
+            }
+            else if (amount <= 0)
+            {
+                Console.WriteLine("Deposit amount must be positive.");
+            }
+            else
+            {
+                Balance += amount;
+                Console.WriteLine($"{amount} deposited. New balance: {Balance}");
+            }
+        }
+
+        public void Withdraw(float amount)
+        {
+            if (amount <= 0)
+            {
+                Console.WriteLine("Withdrawal amount must be positive.");
+            }
+            else if (amount > Balance)
+            {
+                Console.WriteLine("Insufficient balance. Withdrawal canceled.");
+            }
+            else
+            {
+                Balance -= amount;
+                Console.WriteLine($"{amount} withdrawn. New balance: {Balance}");
+            }
+        }
+    }
+
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            Account collin = new Account("1233445566778");
+            collin.Deposit(600000);  // Valid deposit
+            collin.Deposit(300000);  // Valid deposit
+            collin.Withdraw(85000);  // Valid withdrawal
+            Console.WriteLine($"girish's account balance is {collin.Balance}");
+
+            collin.Withdraw(800000); // Should fail due to insufficient funds
+            collin.Withdraw(925000); // Should fail due to insufficient funds
+
+            collin.Deposit(1000001); // Should fail due to deposit limit
+            collin.Deposit(10000); // Valid deposit
+            //neha.Balance = 45;   error
+            Console.WriteLine($"collin's final account balance is {collin.Balance}");
+            Console.ReadKey();
+        }
+    }
+
+}
