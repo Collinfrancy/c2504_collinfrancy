@@ -35,7 +35,7 @@ namespace csharp
             Movie Puspha = new Movie(1001, "Puspha");
             Movie Avesham = new Movie();
             Avesham.id = 1002;
-            Avesham.name = "Minnale";
+            Avesham.name = "Avesham";
 
             Console.WriteLine($"id={Puspha.id},name={Puspha.name}");
             Console.WriteLine($"id={Avesham.id},name={Avesham.name}");
