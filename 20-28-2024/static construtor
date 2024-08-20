@@ -33,3 +33,17 @@ internal class Programs
         Console.WriteLine($"numberOfUsers={AppConfig.numberOfUsers} eachUserNumberOfVisits={AppConfig.eachUserNumberOfVisits}");
     }
 }
+
+*****OUTPUT******
+
+
+Static Constr
+instance parameterless Constr
+numberOfUsers=10 eachUserNumberOfVisits=20
+Press any key to continue . . .
+
+
+
+
+
+
