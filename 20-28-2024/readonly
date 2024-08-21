@@ -1,0 +1,33 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace @readonly
+{
+    class Student
+    {
+        public readonly string RegNo; //can be only changed inside constructor.
+        public string Name { get; set; }
+        public Student(string regNo)
+        {
+            RegNo = regNo;
+        }
+
+        public override string ToString()
+        {
+            return $"{RegNo} - {Name}";
+        }
+    }
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            Student s1 = new Student("MBI19CS021");
+            s1.Name = "collin";
+          //  s1.RegNo = "MBI18CS023"; cant do this here
+            Console.WriteLine(s1.ToString()); 
+        }
+    }
+}
