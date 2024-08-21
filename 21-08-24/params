@@ -1,0 +1,26 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace @params
+{
+    internal class Program
+    {
+        static void Add(int x,int y,params int[] numbers) //can receive n number of parameters
+        {
+            var sum=numbers.Sum();
+            Console.WriteLine(sum+x+y);
+        }
+        static void Main(string[] args)
+        {
+            Add(1, 2);
+            Add(1, 2,5);
+            Add(1, 2, 5, 9);
+        }
+    }
+}
+
+*****OUTPUT*********
+
