@@ -60,8 +60,8 @@ public class MaximumDosage
 public class ThirdLeastDosage
 {
     public Prescription FindThirdLeastDosage(List<Prescription> prescriptions)
-    {
-        Prescription first = null, second = null, third = null;
+    {      
+        double first = double.MaxValue, second = double.MaxValue, third = double.MaxValue;
         Prescription thirdLeastDosagePrescription = null;
 
         foreach (var prescription in prescriptions)
