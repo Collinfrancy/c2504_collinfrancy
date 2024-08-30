@@ -1,0 +1,138 @@
+***********************
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace DelegateMishelsir
+{
+
+
+    internal class Program
+    {
+        public delegate void Operation(int n1, int n2);
+
+        public static void Add(int a,int b ) 
+        {
+            Console.WriteLine(a+b);
+        }
+        public static void Sub(int a, int b)
+        {
+            Console.WriteLine(a - b);
+        }
+        public static void Mul(int a, int b,int c)
+        {
+            Console.WriteLine(a *b*c);
+        }
+
+
+        static void Main(string[] args)
+        {
+
+            Operation op = Add;
+           // op(10, 5);
+
+            op += Sub;//Adding function to delegaet
+            op += Sub;
+
+            op -= Sub; //Removing function from delegtae
+            op(10, 5);
+
+
+
+        }
+    }
+}
+
+******************
+
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+
+namespace DelegateExample
+{
+    class PRogram
+    {
+
+        public delegate void Actions();
+
+        public static void SetTimer(int time, Actions op)
+        {
+            Thread.Sleep(time);
+            op();
+        }
+
+        public static void Error1()
+        {
+            Console.WriteLine("Error");
+        }
+        public static void Error2()
+        {
+            Console.WriteLine("Calling Emergency");
+        }
+
+
+        static void Main()
+
+        {
+
+            Actions op = Error1;
+            op += Error2;
+
+            SetTimer(1000, op);
+
+        }
+
+    }
+}
+
+***************************
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace delegateSimplemethod
+{
+    internal class Program
+    {
+
+        public static void Add(int a, int b)
+        {
+            Console.WriteLine(a + b);
+        }
+       
+        public static long Mul(int a, int b)
+        {
+           return  a* b;
+        }
+        public static bool IsEven(int x)
+        {
+            return x % 2 == 0;
+        }
+
+        static void Main(string[] args)
+        {
+
+
+            Action<int, int> x = Add;  //return type is void
+            Func<int,int, long> y = Mul; //last int is the return type,others are parameters
+            Func<int, bool> y1 = IsEven;
+            Predicate<int> z= IsEven;//predicate is used for returntyp having bool and have single parameter
+
+            x(4, 5);
+        }
+    }
+}
+
+
+
