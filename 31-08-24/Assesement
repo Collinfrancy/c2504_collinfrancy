@@ -1,0 +1,558 @@
+*****QUESTION 1*******
+
+Problem Statement: Medication Dosage Analysis
+- Define a class: `Prescription` with the following properties:
+- `PrescriptionID` (integer)
+- `PatientName` (string)
+- `MedicationName` (string)
+- `Dosage` (double, in milligrams)
+- Tasks:
+1. Data Input:
+- Read N `prescriptions` from the keyboard.
+2. Find Maximum Dosage:
+- Display the prescription with the highest dosage among the N `prescriptions`.
+Solve in time complexity of O(N).
+Dont use built-in C# sorting or LINQ.
+3. Find Third Least Dosage:
+- Display the prescription with the third least dosage among the N `prescriptions`.
+Solve in time complexity of O(N).
+Dont use built-in C# sorting or LINQ.
+4. Sort Prescriptions by Medication Name:
+- Implement and call your own sorting algorithm.
+Dont use built-in C# sorting or LINQ.
+
+
+*******ANSWER**********
+
+****Program.cs(Used logging and exception handling)******
+
+
+using System;
+using System.Data.SqlClient;
+using log4net;
+using log4net.Config;
+
+namespace Week4Assessment
+{
+    public class PrescriptionManager
+    {
+        private static readonly ILog log = LogManager.GetLogger(typeof(PrescriptionManager));
+        private static string connectionString = "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=Week4Assessment;Integrated Security=True;";
+
+        public class Prescription
+        {
+            public int PrescriptionID { get; set; }
+            public string PatientName { get; set; }
+            public string MedicationName { get; set; }
+            public double Dosage { get; set; }
+        }
+
+        // Method to create a new prescription
+        public void CreatePrescription(Prescription prescription)
+        {
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    string query = "INSERT INTO Prescription (PrescriptionID,PatientName, MedicationName, Dosage) VALUES (@PrescriptionID,@PatientName, @MedicationName, @Dosage)";
+                    SqlCommand cmd = new SqlCommand(query, conn);
+
+                    cmd.Parameters.AddWithValue("@PrescriptionID", prescription.PrescriptionID);
+                    cmd.Parameters.AddWithValue("@PatientName", prescription.PatientName);
+                    cmd.Parameters.AddWithValue("@MedicationName", prescription.MedicationName);
+                    cmd.Parameters.AddWithValue("@Dosage", prescription.Dosage);
+
+                    conn.Open();
+                    int rowsAffected = cmd.ExecuteNonQuery();
+
+                    if (rowsAffected > 0)
+                    {
+                        log.Info("Prescription created successfully.");
+                    }
+                    else
+                    {
+                        log.Info("[0104] Server Error: Prescription creation failed.");
+                    }
+                }
+            }
+            catch (SqlException ex)
+            {
+                log.Info($"[0105] Server Error: {ex.Message}");
+                throw new ServerException($"[0105] Server Error. {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                log.Info($"[0106] Server Error: {ex.Message}");
+                throw new ServerException($"[0106] Server Error. {ex.Message}");
+            }
+        }
+
+        // Method to read all prescriptions from the database
+        public Prescription[] ReadPrescriptions(int numberOfPrescriptions)
+        {
+            Prescription[] prescriptions = new Prescription[numberOfPrescriptions];
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    string query = "SELECT PrescriptionID, PatientName, MedicationName, Dosage FROM Prescription";
+                    SqlCommand cmd = new SqlCommand(query, conn);
+
+                    conn.Open();
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    int index = 0;
+                    while (reader.Read() && index < prescriptions.Length)
+                    {
+                        prescriptions[index] = new Prescription
+                        {
+                            PrescriptionID = (int)reader["PrescriptionID"],
+                            PatientName = reader["PatientName"].ToString(),
+                            MedicationName = reader["MedicationName"].ToString(),
+                            Dosage = (double)reader["Dosage"]
+                        };
+                        index++;
+                    }
+                   
+                    if (index == 0)
+                    {
+                        log.Info("[0101] No prescriptions found.");
+                    }
+                }
+                log.Info("Successfully read prescriptions from the database.");
+            }
+            catch (SqlException ex)
+            {
+                log.Info($"[0102] Server Error: {ex.Message}");
+                throw new ServerException($"[0102] Server Error. {ex.Message}");
+            }
+            catch (ServerException ex)
+            {
+                log.Info("ServerException occurred.");
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                log.Info($"[0103] Server Error: {ex.Message}");
+                throw new ServerException($"[0103] Server Error. {ex.Message}");
+            }
+
+            return prescriptions;
+        }
+
+        // Method to read a specific prescription by ID
+        public Prescription ReadPrescriptionByID(int id)
+        {
+            Prescription prescription = null;
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    string query = "SELECT PrescriptionID, PatientName, MedicationName, Dosage FROM Prescription WHERE PrescriptionID = @PrescriptionID";
+                    SqlCommand cmd = new SqlCommand(query, conn);
+                    cmd.Parameters.AddWithValue("@PrescriptionID", id);
+
+                    conn.Open();
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    if (reader.Read())
+                    {
+                        prescription = new Prescription
+                        {
+                            PrescriptionID = (int)reader["PrescriptionID"],
+                            PatientName = reader["PatientName"].ToString(),
+                            MedicationName = reader["MedicationName"].ToString(),
+                            Dosage = (double)reader["Dosage"]
+                        };
+                    }
+                    else
+                    {
+                        log.Info("[0107] Server Error: Prescription not found.");
+                    }
+                }
+            }
+            catch (SqlException ex)
+            {
+                log.Info($"[0108] Server Error: {ex.Message}");
+                throw new ServerException($"[0108] Server Error. {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                log.Info($"[0109] Server Error: {ex.Message}");
+                throw new ServerException($"[0109] Server Error. {ex.Message}");
+            }
+
+            return prescription;
+        }
+
+        // Method to update an existing prescription
+        public void UpdatePrescription(Prescription prescription)
+        {
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    string query = "UPDATE Prescription SET PatientName = @PatientName, MedicationName = @MedicationName, Dosage = @Dosage WHERE PrescriptionID = @PrescriptionID";
+                    SqlCommand cmd = new SqlCommand(query, conn);
+
+                    cmd.Parameters.AddWithValue("@PrescriptionID", prescription.PrescriptionID);
+                    cmd.Parameters.AddWithValue("@PatientName", prescription.PatientName);
+                    cmd.Parameters.AddWithValue("@MedicationName", prescription.MedicationName);
+                    cmd.Parameters.AddWithValue("@Dosage", prescription.Dosage);
+
+                    conn.Open();
+                    int rowsAffected = cmd.ExecuteNonQuery();
+
+                    if (rowsAffected > 0)
+                    {
+                        log.Info("Prescription updated successfully.");
+                    }
+                    else
+                    {
+                        log.Info("[0110] Server Error: Prescription update failed.");
+                    }
+                }
+            }
+            catch (SqlException ex)
+            {
+                log.Info($"[0111] Server Error: {ex.Message}");
+                throw new ServerException($"[0111] Server Error. {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                log.Info($"[0112] Server Error: {ex.Message}");
+                throw new ServerException($"[0112] Server Error. {ex.Message}");
+            }
+        }
+
+        // Method to delete a prescription by ID
+        public void DeletePrescription(int id)
+        {
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    string query = "DELETE FROM Prescription WHERE PrescriptionID = @PrescriptionID";
+                    SqlCommand cmd = new SqlCommand(query, conn);
+                    cmd.Parameters.AddWithValue("@PrescriptionID", id);
+
+                    conn.Open();
+                    int rowsAffected = cmd.ExecuteNonQuery();
+
+                    if (rowsAffected > 0)
+                    {
+                        log.Info("Prescription deleted successfully.");
+                    }
+                    else
+                    {
+                        log.Info("[0113] Server Error: Prescription deletion failed.");
+                    }
+                }
+            }
+            catch (SqlException ex)
+            {
+                log.Info($"[0114] Server Error: {ex.Message}");
+                throw new ServerException($"[0114] Server Error. {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                log.Info($"[0115] Server Error: {ex.Message}");
+                throw new ServerException($"[0115] Server Error. {ex.Message}");
+            }
+        }
+
+        // Method to find the prescription with the maximum dosage
+        public Prescription FindMaxDosage(Prescription[] prescriptions)
+        {
+            Prescription maxDosagePrescription = prescriptions[0];
+            foreach (var prescription in prescriptions)
+            {
+                if (prescription.Dosage > maxDosagePrescription.Dosage)
+                {
+                    maxDosagePrescription = prescription;
+                }
+            }
+            return maxDosagePrescription;
+        }
+
+        // Method to find the prescription with the third least dosage
+        public Prescription FindThirdLeastDosage(Prescription[] prescriptions)
+        {
+            double first = double.MaxValue, second = double.MaxValue, third = double.MaxValue;
+            Prescription thirdLeastDosagePrescription = null;
+
+            foreach (var prescription in prescriptions)
+            {
+                if (prescription.Dosage < first)
+                {
+                    third = second;
+                    second = first;
+                    first = prescription.Dosage;
+                }
+                else if (prescription.Dosage < second)
+                {
+                    third = second;
+                    second = prescription.Dosage;
+                }
+                else if (prescription.Dosage < third)
+                {
+                    third = prescription.Dosage;
+                    thirdLeastDosagePrescription = prescription;
+                }
+            }
+            return thirdLeastDosagePrescription;
+        }
+
+        // Method to sort prescriptions by Medication Name using Insertion Sort
+        public void SortByMedicationName(Prescription[] prescriptions)
+        {
+            for (int i = 1; i < prescriptions.Length; i++)
+            {
+                Prescription key = prescriptions[i];
+                int j = i - 1;
+
+                while (j >= 0 && prescriptions[j].MedicationName.CompareTo(key.MedicationName) > 0)
+                {
+                    prescriptions[j + 1] = prescriptions[j];
+                    j--;
+                }
+                prescriptions[j + 1] = key;
+            }
+        }
+
+        // Method to display a prescription
+        public void DisplayPrescription(Prescription prescription)
+        {
+            if (prescription != null)
+            {
+                log.Info($"Prescription ID: {prescription.PrescriptionID}, " +
+                         $"Patient Name: {prescription.PatientName}, " +
+                         $"Medication Name: {prescription.MedicationName}, " +
+                         $"Dosage: {prescription.Dosage} mg");
+            }
+            else
+            {
+                log.Info("No prescription found.");
+            }
+        }
+
+        // Custom exception class for server errors
+        public class ServerException : Exception
+        {
+            public ServerException(string message) : base(message) { }
+        }
+    }
+
+    public class Program
+    {
+        private static readonly ILog log = LogManager.GetLogger(typeof(Program));
+
+        public static void Main()
+        {
+            // Initialize log4net
+            XmlConfigurator.Configure();
+
+            PrescriptionManager prescriptionManager = new PrescriptionManager();
+            int numberOfPrescriptions = 10; // You can adjust this number as needed
+
+            while (true)
+            {
+                Console.WriteLine("Prescription Management System");
+                Console.WriteLine("1. Create Prescription");
+                Console.WriteLine("2. Read Prescription");
+                Console.WriteLine("3. Update Prescription");
+                Console.WriteLine("4. Delete Prescription");
+                Console.WriteLine("5. Read All Prescriptions");
+                Console.WriteLine("6. Exit");
+                Console.Write("Choose an option: ");
+
+                string choice = Console.ReadLine();
+
+                switch (choice)
+                {
+                    case "1":
+                        CreatePrescription(prescriptionManager);
+                        break;
+
+                    case "2":
+                        ReadPrescription(prescriptionManager);
+                        break;
+
+                    case "3":
+                        UpdatePrescription(prescriptionManager);
+                        break;
+
+                    case "4":
+                        DeletePrescription(prescriptionManager);
+                        break;
+
+                    case "5":
+                        ReadAllPrescriptions(prescriptionManager, numberOfPrescriptions);
+                        break;
+
+                    case "6":
+                        return; // Exit the application
+
+                    default:
+                        Console.WriteLine("Invalid option. Please try again.");
+                        break;
+                }
+            }
+        }
+
+        private static void CreatePrescription(PrescriptionManager prescriptionManager)
+        {
+            try
+            {
+                var prescription = new PrescriptionManager.Prescription();
+
+                Console.Write("Enter Patient ID: ");
+                prescription.PrescriptionID = int.Parse(Console.ReadLine());
+
+
+                Console.Write("Enter Patient Name: ");
+                prescription.PatientName = Console.ReadLine();
+
+                Console.Write("Enter Medication Name: ");
+                prescription.MedicationName = Console.ReadLine();
+
+                Console.Write("Enter Dosage (mg): ");
+                prescription.Dosage = double.Parse(Console.ReadLine());
+
+                prescriptionManager.CreatePrescription(prescription);
+            }
+            catch (Exception ex)
+            {
+                log.Info($"Error creating prescription: {ex.Message}");
+            }
+        }
+
+        private static void ReadPrescription(PrescriptionManager prescriptionManager)
+        {
+            try
+            {
+                Console.Write("Enter Prescription ID to read: ");
+                int id = int.Parse(Console.ReadLine());
+
+                var prescription = prescriptionManager.ReadPrescriptionByID(id);
+                prescriptionManager.DisplayPrescription(prescription);
+            }
+            catch (Exception ex)
+            {
+                log.Info($"Error reading prescription: {ex.Message}");
+            }
+        }
+
+        private static void UpdatePrescription(PrescriptionManager prescriptionManager)
+        {
+            try
+            {
+                var prescription = new PrescriptionManager.Prescription();
+
+                Console.Write("Enter Prescription ID to update: ");
+                prescription.PrescriptionID = int.Parse(Console.ReadLine());
+
+                Console.Write("Enter new Patient Name: ");
+                prescription.PatientName = Console.ReadLine();
+
+                Console.Write("Enter new Medication Name: ");
+                prescription.MedicationName = Console.ReadLine();
+
+                Console.Write("Enter new Dosage (mg): ");
+                prescription.Dosage = double.Parse(Console.ReadLine());
+
+                prescriptionManager.UpdatePrescription(prescription);
+            }
+            catch (Exception ex)
+            {
+                log.Info($"Error updating prescription: {ex.Message}");
+            }
+        }
+
+        private static void DeletePrescription(PrescriptionManager prescriptionManager)
+        {
+            try
+            {
+                Console.Write("Enter Prescription ID to delete: ");
+                int id = int.Parse(Console.ReadLine());
+
+                prescriptionManager.DeletePrescription(id);
+            }
+            catch (Exception ex)
+            {
+                log.Info($"Error deleting prescription: {ex.Message}");
+            }
+        }
+
+        private static void ReadAllPrescriptions(PrescriptionManager prescriptionManager, int numberOfPrescriptions)
+        {
+            try
+            {
+                var prescriptions = prescriptionManager.ReadPrescriptions(numberOfPrescriptions);
+                foreach (var prescription in prescriptions)
+                {
+                    prescriptionManager.DisplayPrescription(prescription);
+                }
+            }
+            catch (Exception ex)
+            {
+                log.Info($"Error reading all prescriptions: {ex.Message}");
+            }
+        }
+    }
+}
+
+
+***********OUTPUT*****************
+
+Prescription Management System
+1. Create Prescription
+2. Read Prescription
+3. Update Prescription
+4. Delete Prescription
+5. Read All Prescriptions
+6. Exit
+Choose an option: 1
+Enter Patient ID: 9
+Enter Patient Name: Febin
+Enter Medication Name: Aspirin
+Enter Dosage (mg): 340
+2024-08-31 17:46:07,084 [1] INFO  Week4Assessment.PrescriptionManager - Prescription created successfully.
+Prescription Management System
+1. Create Prescription
+2. Read Prescription
+3. Update Prescription
+4. Delete Prescription
+5. Read All Prescriptions
+6. Exit
+Choose an option: 2
+Enter Prescription ID to read: 9
+2024-08-31 17:46:18,615 [1] INFO  Week4Assessment.PrescriptionManager - Prescription ID: 9, Patient Name: Febin, Medication Name: Aspirin, Dosage: 340 mg
+Prescription Management System
+1. Create Prescription
+2. Read Prescription
+3. Update Prescription
+4. Delete Prescription
+5. Read All Prescriptions
+6. Exit
+Choose an option: 5
+2024-08-31 17:46:23,704 [1] INFO  Week4Assessment.PrescriptionManager - Successfully read prescriptions from the database.
+2024-08-31 17:46:23,705 [1] INFO  Week4Assessment.PrescriptionManager - Prescription ID: 1, Patient Name: Collin, Medication Name: Amoxicillin, Dosage: 500 mg
+2024-08-31 17:46:23,706 [1] INFO  Week4Assessment.PrescriptionManager - Prescription ID: 2, Patient Name: Ashwin, Medication Name: Ibuprofen, Dosage: 200 mg
+2024-08-31 17:46:23,708 [1] INFO  Week4Assessment.PrescriptionManager - Prescription ID: 3, Patient Name: Alan, Medication Name: Paracetamol, Dosage: 650 mg
+2024-08-31 17:46:23,709 [1] INFO  Week4Assessment.PrescriptionManager - Prescription ID: 4, Patient Name: Dijol, Medication Name: Metformin, Dosage: 1000 mg
+2024-08-31 17:46:23,716 [1] INFO  Week4Assessment.PrescriptionManager - Prescription ID: 5, Patient Name: Neha, Medication Name: Lisinopril, Dosage: 150 mg
+2024-08-31 17:46:23,718 [1] INFO  Week4Assessment.PrescriptionManager - Prescription ID: 6, Patient Name: Mariya, Medication Name: Simvastatin, Dosage: 20 mg
+2024-08-31 17:46:23,720 [1] INFO  Week4Assessment.PrescriptionManager - Prescription ID: 7, Patient Name: Anurag, Medication Name: Omeprazole, Dosage: 40 mg
+2024-08-31 17:46:23,722 [1] INFO  Week4Assessment.PrescriptionManager - Prescription ID: 8, Patient Name: Anugrah, Medication Name: Ciprofloxacin, Dosage: 750 mg
+2024-08-31 17:46:23,723 [1] INFO  Week4Assessment.PrescriptionManager - Prescription ID: 9, Patient Name: Febin, Medication Name: Aspirin, Dosage: 340 mg
+
+Prescription Management System
+1. Create Prescription
+2. Read Prescription
+3. Update Prescription
+4. Delete Prescription
+5. Read All Prescriptions
+6. Exit
+Choose an option: 6
+Press any key to continue . . .
