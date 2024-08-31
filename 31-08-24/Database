@@ -1,0 +1,17 @@
+CREATE TABLE Prescription (
+    PrescriptionID INT  NOT NULL,
+    PatientName  NVARCHAR (100) NOT NULL,
+    MedicationName NVARCHAR (100) NOT NULL,
+    Dosage  FLOAT (53)  NULL,
+);
+
+
+INSERT INTO Prescription (PrescriptionID, PatientName, MedicationName, Dosage) VALUES
+(1, 'Collin', 'Amoxicillin', 500),
+(2, 'Ashwin', 'Ibuprofen', 200),
+(3, 'Alan', 'Paracetamol', 650),
+(4, 'Dijol', 'Metformin', 1000),
+(5, 'Neha', 'Lisinopril', 150),
+(6, 'Mariya', 'Simvastatin', 20),
+(7, 'Anurag', 'Omeprazole', 40),
+(8, 'Anugrah', 'Ciprofloxacin', 750);
