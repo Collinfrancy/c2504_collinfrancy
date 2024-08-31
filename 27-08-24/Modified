@@ -230,3 +230,118 @@ namespace Week4Assessment
 }
 
 *****PrescriptionManagerTests.cs*****
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Week4Assessment;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Week4Assessment.Tests
+{
+    [TestClass()]
+    public class PrescriptionManagerTests
+    {
+        private PrescriptionManager _manager;
+
+        [TestInitialize]
+        public void Setup()
+        {
+            _manager = new PrescriptionManager();
+        }
+
+        [TestMethod()]
+        public void ReadPrescriptionsTest()
+        {
+            // Setup mock data
+            var mockData = new[]
+            {
+                new PrescriptionManager.Prescription { PrescriptionID = 1, PatientName = "John Doe", MedicationName = "MedA", Dosage = 10.0 },
+                new PrescriptionManager.Prescription { PrescriptionID = 2, PatientName = "Jane Doe", MedicationName = "MedB", Dosage = 20.0 },
+                new PrescriptionManager.Prescription { PrescriptionID = 3, PatientName = "Jim Beam", MedicationName = "MedC", Dosage = 5.0 }
+            };
+            var prescriptions = mockData;
+            Assert.AreEqual(3, prescriptions.Length);
+            Assert.AreEqual("John Doe", prescriptions[0].PatientName);
+            Assert.AreEqual(20.0, prescriptions[1].Dosage);
+            Assert.AreEqual("MedC", prescriptions[2].MedicationName);
+        }
+
+        [TestMethod()]
+        public void FindMaxDosageTest()
+        {
+            var prescriptions = new[]
+            {
+                new PrescriptionManager.Prescription { PrescriptionID = 1, Dosage = 10.0 },
+                new PrescriptionManager.Prescription { PrescriptionID = 2, Dosage = 20.0 },
+                new PrescriptionManager.Prescription { PrescriptionID = 3, Dosage = 15.0 }
+            };
+
+            var maxDosagePrescription = _manager.FindMaxDosage(prescriptions);
+
+            Assert.IsNotNull(maxDosagePrescription);
+            Assert.AreEqual(20.0, maxDosagePrescription.Dosage);
+        }
+
+        [TestMethod()]
+        public void FindThirdLeastDosageTest()
+        {
+            var prescriptions = new[]
+            {
+                new PrescriptionManager.Prescription { PrescriptionID = 1, Dosage = 200.0 },
+                new PrescriptionManager.Prescription { PrescriptionID = 2, Dosage = 250.0 },
+                new PrescriptionManager.Prescription { PrescriptionID = 3, Dosage = 1000.0 },
+                new PrescriptionManager.Prescription { PrescriptionID = 4, Dosage = 1200.0 },
+                new PrescriptionManager.Prescription { PrescriptionID = 5, Dosage = 750.0 },
+                new PrescriptionManager.Prescription { PrescriptionID = 6, Dosage = 650.0 },
+            };
+
+            var thirdLeastDosagePrescription = _manager.FindThirdLeastDosage(prescriptions);
+
+            Assert.IsNotNull(thirdLeastDosagePrescription);
+            Assert.AreEqual(650.0, thirdLeastDosagePrescription.Dosage);
+        }
+
+        [TestMethod()]
+        public void SortByMedicationNameTest()
+        {
+            var prescriptions = new[]
+            {
+                new PrescriptionManager.Prescription { PrescriptionID = 1, MedicationName = "Zeta" },
+                new PrescriptionManager.Prescription { PrescriptionID = 2, MedicationName = "Alpha" },
+                new PrescriptionManager.Prescription { PrescriptionID = 3, MedicationName = "Gamma" }
+            };
+
+            _manager.SortByMedicationName(prescriptions);
+
+            Assert.AreEqual("Alpha", prescriptions[0].MedicationName);
+            Assert.AreEqual("Gamma", prescriptions[1].MedicationName);
+            Assert.AreEqual("Zeta", prescriptions[2].MedicationName);
+        }
+
+        [TestMethod()]
+        public void DisplayPrescriptionTest()
+        {
+            var prescription = new PrescriptionManager.Prescription
+            {
+                PrescriptionID = 100,
+                PatientName = "John Doe",
+                MedicationName = "MedA",
+                Dosage = 10
+            };
+
+            // Capture log output
+            var logOutput = new System.IO.StringWriter();
+            Console.SetOut(logOutput);
+
+            _manager.DisplayPrescription(prescription);
+
+            var output = logOutput.ToString();
+            Assert.IsTrue(output.Contains("Prescription ID: 100, Patient Name: John Doe, Medication Name: MedA, Dosage: 10 mg"));
+            
+        }
+    }
+}
+
